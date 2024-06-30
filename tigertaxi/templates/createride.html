@@ -1,0 +1,155 @@
+{# ------------------------------------------------------------------ #}
+{# createride.html                                                    #}
+{# Authors: Shazra Raza, Kwasi Oppong-Badu                            #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}Create a Ride{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="/static/css/createride.css">
+{% endblock %}
+
+{% block content %}
+{#creating a responsive grid for input form#}
+<h1>Create a Ride</h1>
+<hr>
+<div class="container overflow-hidden">
+  <div class="row">
+    <div class="{#py-5 px-md-5 #}col-sm">
+      <div {#class="rectangle1 p-4#}">
+        {#<div class="headingride my-4">Create a Ride</div>#}
+
+        <form action="{{url_for('main_bp.rides')}}" method="POST" class="mt-1" onsubmit="disableSubmit()">
+        {#create dropdown list for first option#}
+
+        {#input field for origin/destination#}
+        <div class="form-group">
+          <div class="input-group">
+            <select required class="custom-select shadow-sm bg-light" name="to_from" id="locationSelect">
+              <option selected value="From">
+                From Princeton
+              </option>
+              <option value="To">
+                To Princeton
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <input required class="form-control" type="text"
+          placeholder="Destination"
+          aria-describedby="locationHelp"
+          name="location" id="location">
+          <small id="locationHelp"
+            class="form-text text-muted text-left">
+              Pick the name of some location other than 'Princeton'.
+            </small>
+        </div>
+
+        {#input field for date#}
+        <div class="form-group">
+          <input required class="form-control" type="text" placeholder="When's the trip?"
+            onfocus="handleDateTimeInputFocus(this)"
+            onblur="handleDateTimeInputBlur(this)"
+            aria-describedby="departureHelp"
+            name="departure_datetime">
+            <small id="departureHelp"
+            class="form-text text-muted text-left">
+              Rides must depart between 1 hour and 6 months from the
+              current date/time.
+            </small>
+        </div>
+
+        {#input field for total no. of people in ride#}
+        <div class="form-group">
+          <input required class="form-control" type="number" min="2" max="10"
+            placeholder="How many seats? (including you!)"
+            aria-describedby="capacityHelp"
+            name="capacity">
+            <small id="capacityHelp"
+            class="form-text text-muted text-left">
+              Ride capacity must be between 2 and 10.
+            </small>
+        </div>
+
+        {# Hidden input for timezone info#}
+        <input type="hidden" name="utc_offset" id="utc_offset" value="0">
+
+        {# Use a select for the "Show My Name Field", input name = "show_id"
+        option values = ["Yes", "No"] #}
+        <div class="form-group">
+          <div class="input-group">
+            <label for="show_id" style="padding-top: 6px; padding-right: 39px;">Show my name? </label>
+            <select class="custom-select" name="show_id">
+              <option value="Yes" selected>
+                Yes
+              </option>
+              <option value="No">
+                No
+              </option>
+            </select>
+          </div>
+        </div>
+
+        {#text input field#}
+        <div class="form-group">
+          <div class="input-group">
+            <label for="notes" style="padding-top: 6px; padding-right: 6px;">Any additional notes?</label>
+            <textarea class="form-control" placeholder="" maxlength="280" name="notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      {#fixing spacing with an additional div #}
+      <div class="form-group">
+      </div>
+
+      {#button for creating ride#}
+      <div class="form-group btnposition">
+        <input class="form-control button mx-auto rounded-lg" data-toggle="modal" data-target="#submitModal" value="Submit">
+      </div>
+
+
+      {# modal #}
+      <!-- Modal -->
+      <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title  ml-auto pl-4" id="exampleModalLabel">Create Ride</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to create this ride?</p>
+              <p>
+                Rides <strong>can't be deleted or changed</strong>, but
+                they'll<br> disappear from the app 6 hours after
+                departure.
+              </p>
+            </div>
+            <div class="modal-footer">
+              <div class="mx-auto">
+                <button type="button form-control" class="btn btn-success" type="submit" value="submit">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcFAjAelyVZtaoblzr6ovhp4D2XuCJ4k&libraries=places&callback=initMapCreate">
+</script>
+<script src="/static/js/createride.js"></script>
+{% endblock %}

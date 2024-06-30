@@ -1,0 +1,59 @@
+{# ------------------------------------------------------------------ #}
+{#  guide.html                                                        #}
+{#  Author: Meet Patel                                                #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}Ride Guide{% endblock %}
+
+{# Navbar override for unauthorized pages #}
+{% block navbar %}
+{% include "elements/unauth-nav.html"%}
+{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/css/guide.css">
+{% endblock %}
+
+{% block content %}
+<h1>Ride Guide</h1>
+<hr>
+<div class="container fluid">
+    <div class="row justify-content-around">
+        <div class="card shadow-sm rounded-md text-left border-primary m-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <a href="https://www.uber.com/" target="_blank" class="btn btn-primary btn-lg btn-block rounded-md">Uber</a>
+              <p class="card-text">A popular ridesharing app available for use on the web, the App Store, Google Play.</p>
+            </div>
+        </div>
+        <div class="card shadow-sm rounded-md text-left border-primary m-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <a href="https://www.lyft.com/" target="_blank" class="btn btn-primary btn-lg btn-block rounded-md">lyft</a>
+              <p class="card-text">A popular ridesharing app available for use on the web, the App Store, Google Play.</p>
+            </div>
+        </div>
+        <div class="card shadow-sm rounded-md text-left border-primary m-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <a href="https://www.google.com/search?q=princeton+taxi+service" target="_blank" class="btn btn-primary btn-lg btn-block rounded-md">Taxi Services</a>
+              <p class="card-text">Find a taxi from a variety of local providers to take you where you need.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-around">
+        <div class="card shadow-sm rounded-md text-left border-primary m-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <a href="https://transportation.princeton.edu/getting-around/tigertransit/routes-schedules" target="_blank" 
+                class="btn btn-primary btn-lg btn-block rounded-md">Princeton Weekend Shopper</a>
+              <p class="card-text">Take a ride on the University bus to a selection of nearby grocery and general stores.</p>
+            </div>
+        </div>
+        <div class="card shadow-sm rounded-md text-left border-primary m-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <a href="https://www.njtransit.com/" target="_blank" class="btn btn-primary btn-lg btn-block rounded-md">NJTransit</a>
+              <p class="card-text">Hop on a train to get around the Northeast Corridor.</p>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main_bp.landing') }}" class="btn btn-primary btn-lg btn-block rounded-md" id="backHome">Return to Login Screen</a>
+</div>
+{% endblock %}

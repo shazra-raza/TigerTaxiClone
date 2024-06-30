@@ -1,0 +1,17 @@
+/***********************************************************************
+**** searchrides.css
+**** Authors: Jude Muriithi, Meet Patel
+**** Description: Defines CSS styles used across searchrides.html
+***********************************************************************/
+
+/* Fix scrolling through pills on mobile */
+#nav-tab {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+
+/* Lower opacity on 'nothing here' messages */
+.tt-nothing {
+    opacity: 0.65;
+}
+

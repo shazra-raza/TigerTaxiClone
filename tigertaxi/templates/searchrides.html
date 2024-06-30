@@ -1,0 +1,71 @@
+{# ------------------------------------------------------------------ #}
+{# searchrides.html                                                   #}
+{# Authors: Aatmik Gupta, Kwasi Oppong-Badu                           #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}Search Rides{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/css/searchrides.css">
+{% endblock %}
+
+{% block content %}
+    <h1>Search Rides</h1>
+    <hr>
+    <nav>
+        <div class="nav nav-pills container-fluid nav-justified p-0 pb-2" id="nav-tab" role="tablist">
+          <a class="nav-link m-1 shadow-sm active" id="from-princeton-tab" data-toggle="tab" href="#from-princeton" role="tab" aria-controls="from-princeton" aria-selected="true" onclick="handleFromTabClick(this)">From Princeton</a>
+          <a class="nav-link m-1 shadow-sm" id="to-princeton-tab" data-toggle="tab" href="#to-princeton" role="tab" aria-controls="to-princeton" aria-selected="false" onclick="handleToTabClick(this)">To Princeton</a>
+        </div>
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+
+    <div class="tab-pane fade show active" id="from-princeton" role="tabpanel" aria-labelledby="from-princeton-tab">
+        <div class="input-group m-1 mx-auto">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="destPrepend">&nbsp;To</span>
+            </div>
+            <input class="form-control" type="text" name="destination" placeholder="Destination" maxlength="256" aria-describedby="destPrepend">
+        </div>
+
+        <div class="input-group m-1 mx-auto">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="datePrependDest">On</span>
+            </div>
+            <input class="form-control" type="text" name="departure_date"
+            placeholder="Date" onfocus="handleDateInputFocus(this)"
+            onblur="handleDateInputBlur(this)"
+            aria-describedby="datePrependDest">
+        </div>
+        <hr>
+        <div id="from-princeton-container"></div>
+    </div>
+
+    <div class="tab-pane fade" id="to-princeton" role="tabpanel" aria-labelledby="to-princeton-tab">
+        <div class="input-group m-1 mx-auto">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="originPrepend">From</span>
+            </div>
+            <input class="form-control" type="text" name="origin" placeholder="Origin" maxlength="256" aria-describedby="originPrepend">
+        </div>
+
+        <div class="input-group m-1 mx-auto">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="datePrependOrigin">&nbsp;&nbsp;On&nbsp;&nbsp;</span>
+            </div>
+            <input class="form-control" type="text"
+            name="departure_date" placeholder="Date"
+            onfocus="handleDateInputFocus(this)"
+            onblur="handleDateInputBlur(this)"
+            aria-describedby="datePrependOrigin">
+        </div>
+        <hr>
+        <div id="to-princeton-container"></div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+<script src="/static/js/searchrides.js"></script>
+{% endblock %}

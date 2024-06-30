@@ -1,0 +1,218 @@
+#-----------------------------------------------------------------------
+# api.txt
+# Author: Kwasi Oppong-Badu
+# Description: Defines the inputs and outputs of the functions in
+# models.py
+#-----------------------------------------------------------------------
+
+User API ---------------------------------------------------------------
+
+def save(self)
+  Saves the User instance to the db, then returns the User
+
+def query_outbound_requests(self)
+  Creates a query object selecting RideRequests whose `user_id` matches the User instance's `id`.
+  This does not return the actual records, only a query object which can be further manipulated.
+
+def get_outbound_requests(self)
+  Returns a list of RideRequests whose `user_id` matches the User instance's `id`.
+
+def get_pending_outbound_requests(self)
+  Returns a list of RideRequests whose `user_id` matches the User instance's `id`, and
+  whose `status` is 'PENDING'
+
+def get_rejected_outbound_requests(self)
+  Returns a list of RideRequests whose `user_id` matches the User instance's `id`, and
+  whose `status` is 'PENDING'
+
+def get_accepted_inbound_requests(self)
+  Returns a list of RideRequests whose `user_id` matches the User instance's `id`, and
+  whose `status` is 'ACCEPTED'
+
+def get_rejected_inbound_requests(self)
+  Returns a list of RideRequests whose `user_id` matches the User instance's `id`, and
+  whose `status` is 'REJECTED'
+
+def get_requests_outbox(self)
+  Returns a dictionary of the User instance's accepted, pending, and rejected RideRequests.
+
+def query_inbound_requests(self)
+  Creates a query object selecting RideRequests for Rides whose `creator_id` matches the User
+  instance's `id`. This does not return the actual records, only a query object which can be
+  further manipulated.
+
+def get_inbound_requests(self)
+  Returns a list of  RideRequests for Rides whose `creator_id` matches the User instance's `id`.
+
+def get_pending_inbound_requests(self)
+  Returns a list of  RideRequests for Rides whose `creator_id` matches the User instance's `id`, and
+  whose `status` is 'PENDING'
+
+def get_rejected_inbound_requests(self)
+  Returns a list of  RideRequests for Rides whose `creator_id` matches the User instance's `id`, and
+  whose `status` is 'PENDING'
+
+def get_accepted_inbound_requests(self)
+  Returns a list of  RideRequests for Rides whose `creator_id` matches the User instance's `id`, and
+  whose `status` is 'ACCEPTED'
+
+def get_requests_outbox(self)
+  Returns a dictionary of the accepted, pending, and rejected RideRequests made to Rides  whose `creator_id`
+  matches the User instance's `id`.
+
+def query_rides(self)
+    Creates a query object selecting Rides whose `creator_id` matches the User instance's `id` or
+    that the User has joined by a RideRequest, ordered by the Rides' `departure_datetime` fields.
+    This does not return the actual records, only a query object which can be further manipulated.
+
+def get_created_rides(self)
+    Returns a list of Rides whose `creator_id` matches the User instance's `id`, ordered by the
+    Rides' `departure_datetime` fields.
+
+def get_all_rides(self)
+    Returns a list of Rides the User has either created or joined by a RideRequest, ordered by the
+    Rides' `departure_datetime` fields.
+
+def get_upcoming_rides(self)
+    Returns a list of upcoming Rides the User has either created or joined by a RideRequest, ordered by the
+    Rides' `departure_datetime` fields.
+
+def __repr__(self)
+  Returns a string representation of the User instance
+
+Ride API ---------------------------------------------------------------
+
+def save(self)
+  Saves the User instance to the db, then returns the User
+
+def search(origin=None, destination=None, departure_datetime=None):
+  Returns a list of rides who satisfy the search kwargs.
+
+def format_departure_datetime(self)
+  Returns a string representation of the Ride's `departure_datetime` field
+
+def query_upcoming_rides(self)
+  Creates a query object selecting Rides whose `departure_datetime` is greater than the current time.
+  This does not return the actual records, only a query object which can be further manipulated.
+
+def get_upcoming_rides(self)
+  Returns a list of all Rides whose `departure_datetime` is greater than the current time.
+
+def create_rider(self, user, is_creator=False)
+  Creates a Rider whose `ride_id` is the Ride instance's `id` and whose `user_id` is the `user.id`.
+  If the `is_creator` argument is True, the Rider's `is_creator` field is set to True.
+
+def create_request(self, user)
+  Creates a RideRequest whose `ride_id` is the Ride instance's `id` and whose `user_id` is the `user.id`.
+
+def get_creator(self)
+  Returns the User instance whose `id` matches the Ride instance's `creator_id`
+
+def get_riders(self)
+  Returns a list of Rider instances whose `ride_id` matches the Ride instance's `id`
+
+def get_all_requests(self)
+  Returns a list of RideRequest instances whose `ride_id` matches the Ride instance's `id`
+
+def get_pending_requests(self)
+  Returns a list of RideRequest instances whose `ride_id` matches the Ride instance's `id`
+  and whose `status` is 'PENDING'
+
+def get_accepted_requests(self)
+  Returns a list of RideRequest instances whose `ride_id` matches the Ride instance's `id`
+  and whose `status` is 'ACCEPTED'
+
+def get_rejected_requests(self)
+  Returns a list of RideRequest instances whose `ride_id` matches the Ride instance's `id`
+  and whose `status` is 'REJECTED'
+
+def riders_count(self)
+  Returns the number of Riders for the Ride instance
+
+def is_full(self)
+  Returns True if the Ride instance has reached its `capacity`
+
+def has_room(self)
+  Returns True if the Ride instance has room for another Rider
+
+def is_user_rider(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's Riders' `user_id`
+
+def has_user_requested(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's RideRequests' `user_id`
+
+def is_user_creator(self, user)
+  Returns True if the `user.id` matches the Ride instance's `creator_id`
+
+def is_user_request_pending(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's pending RideRequests' `user_id`
+
+def has_user_been_rejected(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's rejected RideRequests' `user_id`
+
+def has_user_been_accepted(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's accepted RideRequests' `user_id`
+
+def has_user_cancelled(self, user)
+  Returns True if the `user.id` matches any of the Ride instance's cancelled RideRequests' `user_id`
+
+def __repr__(self)
+  Returns a string representation of the Ride instance
+
+@db.event.listens_for(Ride, "after_insert")
+def after_insert(mapper, connection, target):
+    rider_table = Rider.__table__
+    if target.creator_id is not None:
+        connection.execute(
+            rider_table.insert(),
+            {'ride_id': target.id, 'user_id': target.creator_id, 'is_creator': True}
+        )
+
+This function is a hook that enforces that after a Ride is inserted into the DB, the Ride's creator
+becomes a Rider of the Ride, with the `is_creator` flag set to true.
+
+RideRequest API --------------------------------------------------------
+
+def save(self)
+  Saves the RideRequest instance to the db, then returns the RideRequest
+
+def is_accepted(self)
+    Is the RideRequest instance ACCEPTED?
+
+def is_rejected(self)
+    Is the RideRequest instance REJECTED?
+
+def is_pending(self)
+    Is the RideRequest instance PENDING?
+
+def is_cancelled(self)
+    Is the RideRequest instance CANCELLED?
+
+def accept(self)
+  Sets the RideRequest instance's `status` to 'ACCEPTED', creates a Rider, then updates the `status_changed_at` to the current time
+
+def reject(self)
+  Sets the RideRequest instance's `status` to 'REJECTED', then updates the `status_changed_at` to the current time
+
+def cancel(self)
+  Sets the RideRequest instance's `status` to 'CANCELLED', then updates the `status_changed_at` to the current time
+
+def to_rider(self)
+  Creates a Rider whose `ride_id` is the RideRequest instance's `ride_id`, whose `user_id` is the RideRequest instance's `user_id`,
+  and whose `ride_request_id` is the RideRequest instance's `id`.
+
+def __repr__(self)
+  Returns a string representation of the RideRequest instance
+
+----------------------------------------------------------
+
+Rider model api
+
+def save(self)
+  Saves the Rider instance to the db, then returns the Rider
+
+def netid(self)
+  Returns the netid of the User instance whose `id` matches the Rider instance's `user_id`
+
+def __repr__(self)
+  Returns a string representation of the Rider.

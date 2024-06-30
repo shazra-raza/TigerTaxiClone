@@ -1,0 +1,32 @@
+{# ------------------------------------------------------------------ #}
+{#  nav.html                                                          #}
+{#  Authors: Meet Patel, Jude Muriithi                                #}
+{# ------------------------------------------------------------------ #}
+
+<nav id="topnav" class="navbar navbar-expand-md navbar-dark fixed-top">
+    <a class="navbar-brand" href="{{ url_for('main_bp.search_rides') }}">TigerTaxi</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('main_bp.search_rides')}}">Search Rides</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('main_bp.create_ride')}}">Create a Ride</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('main_bp.user_rides')}}">My Rides</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ netid }}</a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{url_for('main_bp.settings')}}">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{url_for('cas.logout')}}">Logout</a>
+            </div>
+        </li>
+        </ul>
+    </div>
+</nav>

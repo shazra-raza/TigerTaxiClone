@@ -1,0 +1,82 @@
+/***********************************************************************
+**** main.css
+**** Author: Jude Muriithi
+**** Description: Defines CSS styles used across the entire application
+***********************************************************************/
+
+/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,700;1,400&family=Outfit:wght@400;700&display=swap');
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Pad the top of the body by the nav height */
+  padding-top: 56px;
+
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+
+  /* Global body text font prefs */
+  font-family: 'Cabin', sans-serif;
+}
+
+/* Global heading font prefs */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Add some padding at the tops of pages */
+h1:first-of-type {
+  padding-top: 15px;
+}
+
+/* Footer and nav styles */
+#topnav {
+  background-color: #367BE3;
+  color: #ffffff;
+}
+#topnav .navbar-brand {
+  font-family: 'Outfit', sans-serif;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+/* Change the appearance of Bootstrap badges to match buttons */
+.badge {
+  display: inline-block;
+  font-weight: normal;
+  font-size: 1rem;
+
+  padding: 0.45rem 0.8rem;
+  line-height: 1.5;
+
+  text-align: center;
+  vertical-align: middle;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Custom additional class "badge-sm" for small badges */
+.badge.badge-sm {
+  padding: 0.32rem 0.56rem;
+  font-size: .875rem;
+  border-radius: 0.2rem;
+}
+
+/* Wrap text on all buttons and badges */
+.btn, .badge {
+  word-break: break-word!important;
+  word-wrap: break-word!important;
+  white-space: normal!important;
+}

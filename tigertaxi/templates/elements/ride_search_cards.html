@@ -1,0 +1,116 @@
+{# ------------------------------------------------------------------ #}
+{# ride_search_cards.html                                             #}
+{# Authors: Aatmik Gupta, Kwasi Oppong-Badu, Jude Muriithi            #}
+{# ------------------------------------------------------------------ #}
+
+{% for ride in rides: %}
+<div class="card shadow-sm rounded-md text-left m-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item bg-light">
+        <span class="mr-2">
+          <strong class="mr-2">From:</strong>
+          <span class="badge badge-dark badge-sm my-1">
+            {{ ride.origin }}
+          </span>
+        </span>
+        <span class="mr-2 d-block d-sm-inline">
+            <strong class="mr-2">
+                <span class="d-sm-none">
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                </span>
+                To:
+              </strong>
+          <span class="badge badge-dark badge-sm my-1">
+          {{ ride.destination }}
+          </span>
+        </span>
+      </li>
+      <li class="list-group-item">
+        <strong class="mr-2">Departure:</strong>
+        <span class="tt-date d-block d-sm-inline">{{ride.departure_datetime}}</span>
+      </li>
+      <li class="list-group-item">
+        <strong class="mr-2">Capacity:</strong>
+        <span class="badge badge-primary">
+            {{ ride.riders_count() }} / {{ ride.capacity }}
+        </span>
+      </li>
+      {% if (ride.notes) and (ride.notes|length > 0) %}
+      <li class="list-group-item">
+        <strong class="mr-2">Notes:</strong>
+        <span class="d-block d-sm-inline">{{ ride.notes }}</span>
+      </li>
+      {% endif %}
+      <li class="list-group-item">
+        <strong class="mr-2">Created by:</strong>
+        <div class=" d-block d-sm-inline mr-auto">
+          <span class="badge border border-dark my-1 m-sm-1">
+            {% if ride.is_anonymous %}
+            Princeton Student 🎒
+            {% else %}
+            {{ride.creator.disp_name}}
+            ({{ ride.creator.netid }})
+            {% endif %}
+          </span>
+        </div>
+      </li>
+      <li class="list-group-item text-center bg-light">
+        {% if current_user.netid == ride.creator.netid %}
+            <button class="btn btn-secondary" type="button" disabled>
+            Created By You
+            </button>
+        {% elif ride.is_user_rider(current_user) %}
+            <button class="btn btn-secondary" type="button" disabled>
+            Already Joined
+            </button>
+        {% elif ride.is_user_request_pending(current_user) %}
+            <button class="btn btn-secondary" type="button" disabled>
+            Request Pending
+            </button>
+        {% elif ride.has_user_been_rejected(current_user) %}
+            <button class="btn btn-secondary" type="button" disabled>
+            Request Rejected
+            </button>
+        {% elif not ride.has_room() %}
+            <button class="btn btn-secondary" type="button" disabled>
+            Ride Full
+            </button>
+        {% else %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#requestRideModal-{{ride.id}}">
+            Request to Join
+            </button>
+            <form action="{{url_for('main_bp.ride_requests', ride_id=ride.id)}}" method="POST" class="d-inline" onsubmit="disableSubmit()">
+                <div class="modal fade" id="requestRideModal-{{ride.id}}" tabindex="-1" aria-labelledby="requestRideModalLabel-{{ride.id}}" aria-hidden="true">
+                    <div class="modal-dialog text-center">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title ml-auto pl-4" id="requestRideModalLabel-{{ride.id}}">Request Ride</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to request to join this ride?
+                            </div>
+                            <div class="modal-footer">
+                                <div class="mx-auto">
+                                <input type="submit" class="btn btn-success rounded-md" value="Make Request">
+                                <button type="button" class="btn btn-secondary rounded-md" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+      </li>
+    </ul>
+</div>
+{% else %}
+<div class="mt-5 mb-5 p-2 pt-5 pb-5 tt-nothing">
+    <h2>No rides found.</h2>
+    <p>
+      Try creating your own!
+    </p>
+</div>
+{% endfor %}

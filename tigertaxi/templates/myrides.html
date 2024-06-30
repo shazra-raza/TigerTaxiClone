@@ -1,0 +1,506 @@
+{# ------------------------------------------------------------------ #}
+{#  myrides.html                                                      #}
+{#  Authors: Jude Muriithi, Meet Patel                                #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}My Rides{% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/css/myrides.css">
+{% endblock %}
+
+{% block content %}
+<h1>My Rides</h1>
+<hr>
+<nav>
+  <div class="nav nav-pills container-fluid nav-justified p-0 pb-2" id="nav-tab" role="tablist">
+    <a class="nav-link m-1 shadow-sm active" id="my-created-tab" data-toggle="tab" href="#my-created" role="tab" aria-controls="my-created" aria-selected="true">Created Rides</a>
+    <a class="nav-link m-1 shadow-sm" id="accepted-requests-tab" data-toggle="tab" href="#accepted-requests" role="tab" aria-controls="accepted-requests" aria-selected="false">Accepted Requests</a>
+    <a class="nav-link m-1 shadow-sm" id="pending-requests-tab" data-toggle="tab" href="#pending-requests" role="tab" aria-controls="pending-requests" aria-selected="false">Pending Requests</a>
+    <a class="nav-link m-1 shadow-sm" id="rejected-requests-tab" data-toggle="tab" href="#rejected-requests" role="tab" aria-controls="rejected-requests" aria-selected="false">Rejected Requests</a>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+
+{# Created Rides Tab #}
+<div class="tab-pane fade show active" id="my-created" role="tabpanel" aria-labelledby="my-created-tab">
+    {% for ride in created %}
+    <div class="card shadow-sm rounded-md text-left m-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light">
+          <span class="mr-2">
+            <strong class="mr-2">From:</strong>
+            <span class="badge badge-dark badge-sm my-1">
+              {{ ride.origin }}
+            </span>
+          </span>
+          <span class="mr-2 d-block d-sm-inline">
+            <strong class="mr-2">
+              <span class="d-sm-none">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+              To:
+            </strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride.destination }}
+            </span>
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Departure:</strong>
+          <span class="tt-date d-block d-sm-inline">{{ride.departure_datetime}}</span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Capacity:</strong>
+          <span class="badge badge-primary">
+            {{ ride.riders_count() }} / {{ ride.capacity }}
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Riders:</strong>
+          {% if ride.riders|length == 1 %}
+          Just you!
+          {% endif %}
+          {% for rider in ride.riders %}
+            {% if not netid == rider.user.netid %}
+            <div class="d-block d-sm-inline text-left">
+            <button class="btn btn-primary dropdown-toggle mx-auto my-1 m-sm-1"
+            type="button" id="rider-button-{{ ride.id }}-{{ rider.user.netid }}" data-toggle="dropdown"
+            aria-expanded="false">
+              {{ rider.user.disp_name }}
+              ({{ rider.user.netid }})
+            </button>
+            <div class="dropdown-menu" aria-labelledby="rider-button-{{ ride.id }}-{{ rider.user.netid }}">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#contactInfoModal-{{ ride.id }}-{{ rider.user.netid }}">Contact Info</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#removalModal-{{ ride.id }}-{{ rider.user.netid }}">Remove from Ride</a>
+            </div>
+            <div class="modal fade"
+            id="contactInfoModal-{{ ride.id }}-{{ rider.user.netid }}"
+            tabindex="-1"
+            aria-labelledby="contactInfoModalLabel-{{ ride.id }}-{{ rider.user.netid }}"
+            aria-hidden="true">
+              <div class="modal-dialog text-center">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title ml-auto pl-4" id="contactInfoModalLabel-{{ ride.id }}-{{ rider.user.netid }}">
+                      Contact Info
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5>{{ rider.user.disp_name }}</h5>
+                    <p class="m-3">
+                      <strong class="m-2">Email:</strong>
+                      {{rider.user.email}}
+                    </p>
+                    <p class="m-3">
+                      <strong class="mr-2">Phone Number:</strong>
+                      {% if rider.user.phone_num is none %}
+                      Unknown
+                      {% else %}
+                      {{rider.user.phone_num}}
+                      {% endif %}
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="mx-auto">
+                    <button type="button"
+                    class="btn btn-secondary rounded-md"
+                    data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form action="/riders/{{ rider.id }}/remove" method="POST" class="d-inline" onsubmit="disableSubmit()">
+              <div class="modal fade" id="removalModal-{{ ride.id }}-{{ rider.user.netid }}" tabindex="-1" aria-labelledby="removalModalLabel-{{ ride.id }}-{{ rider.user.netid }}" aria-hidden="true">
+                <div class="modal-dialog text-center">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title ml-auto pl-4" id="removalModalLabel-{{ ride.id }}-{{ rider.user.netid }}">Remove Rider</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want to remove {{ rider.user.disp_name }}?</p>
+                      <p>They'll be able to request this ride again.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="mx-auto">
+                      <input type="submit"
+                      class="btn btn-danger rounded-md"
+                      value="Remove">
+                      <button type="button"
+                      class="btn btn-secondary rounded-md"
+                      data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            {% endif %}
+          {% endfor %}
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Requests:</strong>
+          {% for request in ride.get_pending_requests() %}
+          <div class="d-block d-sm-inline text-left">
+          <button class="btn btn-secondary dropdown-toggle mx-auto my-1 m-sm-1"
+          type="button" id="ride-req-button-{{ request.id }}" data-toggle="dropdown"
+          aria-expanded="false">
+            {{ request.user.disp_name }}
+            ({{ request.user.netid }})
+          </button>
+          <div class="dropdown-menu" aria-labelledby="ride-req-button-{{ request.id }}">
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#acceptModal-{{ request.id }}">Accept</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#rejectModal-{{ request.id }}">Reject</a>
+          </div>
+          </div>
+          <form action="/ride_requests/{{ request.id }}/accept" method="POST" class="d-inline" onsubmit="disableSubmit()">
+            <div class="modal fade" id="acceptModal-{{ request.id }}" tabindex="-1" aria-labelledby="acceptModalLabel-{{ request.id }}" aria-hidden="true">
+              <div class="modal-dialog text-center">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title ml-auto pl-4" id="acceptModalLabel-{{ request.id }}">Accept Rider</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to accept {{ request.user.disp_name }}?</p>
+                    <p>Accepted riders can be removed at any time.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="mx-auto">
+                    <input type="submit"
+                    class="btn btn-success rounded-md"
+                    value="Accept">
+                    <button type="button"
+                    class="btn btn-secondary rounded-md"
+                    data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form action="/ride_requests/{{ request.id }}/reject" method="POST" class="d-inline" onsubmit="disableSubmit()">
+            <div class="modal fade" id="rejectModal-{{ request.id }}" tabindex="-1" aria-labelledby="rejectModalLabel-{{ request.id }}" aria-hidden="true">
+              <div class="modal-dialog text-center">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title ml-auto pl-4" id="rejectModalLabel-{{ request.id }}">Reject Rider</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to reject {{ request.user.disp_name }}?</p>
+                    <p>They will <strong>not</strong> be able to request this ride again.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="mx-auto">
+                    <input type="submit" class="btn btn-danger rounded-md" value="Reject">
+                    <button type="button" class="btn btn-secondary rounded-md" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          {% else %}
+          None right now!
+          {% endfor %}
+        </li>
+        <li class="list-group-item bg-light">
+          <strong class="mr-2">Created:</strong>
+          <span class="tt-date d-block d-sm-inline">{{ ride.created_at }}</span>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <div class="mt-5 mb-5 p-2 pt-5 pb-5 tt-nothing">
+      <h2>Nothing here.</h2>
+      <p>
+        It looks like you haven't created any upcoming rides.
+      </p>
+    </div>
+    {% endfor %}
+</div>
+
+{# Accepted Rides Tab #}
+<div class="tab-pane fade" id="accepted-requests" role="tabpanel" aria-labelledby="accepted-requests-tab">
+    {% for ride_req in accepted %}
+    <div class="card shadow-sm rounded-md text-left m-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light">
+          <span class="mr-2">
+            <strong class="mr-2">From:</strong>
+            <span class="badge badge-dark badge-sm my-1">
+              {{ ride_req.ride.origin }}
+            </span>
+          </span>
+          <span class="mr-2 d-block d-sm-inline">
+            <strong class="mr-2">
+              <span class="d-sm-none">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+              To:
+            </strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride_req.ride.destination }}
+            </span>
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Departure:</strong>
+          <span class="tt-date d-block d-sm-inline">{{ride_req.ride.departure_datetime}}</span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Capacity:</strong>
+          <span class="badge badge-primary">
+            {{ ride_req.ride.riders_count() }} / {{ ride_req.ride.capacity  }}
+          </span>
+        </li>
+        {% if (ride_req.ride.notes) and (ride_req.ride.notes|length > 0) %}
+        <li class="list-group-item">
+          <strong class="mr-2">Notes:</strong>
+          <span class="d-block d-sm-inline">{{ ride_req.ride.notes }}</span>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          <strong class="mr-2">Other Riders:</strong>
+          {% for rider in ride_req.ride.riders %}
+          {% if not netid == rider.user.netid %}
+          <button type="button" class="btn btn-primary d-block d-sm-inline mr-auto my-1 m-sm-1"
+          data-toggle="modal"
+          data-target="#riderModal-{{ ride_req.ride.id }}-{{ rider.user.netid }}">
+            {{ rider.user.disp_name }}
+            ({{ rider.user.netid }})
+          </button>
+          <div class="modal fade"
+          id="riderModal-{{ ride_req.ride.id }}-{{ rider.user.netid }}"
+          tabindex="-1"
+          aria-labelledby="riderModalLabel-{{ ride_req.ride.id }}-{{ rider.user.netid }}"
+          aria-hidden="true">
+            <div class="modal-dialog text-center">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title ml-auto pl-4" id="riderModalLabel-{{ ride_req.ride.id }}-{{ rider.user.netid }}">Contact Info</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h5>{{ rider.user.disp_name }}</h5>
+                  <p class="m-3">
+                    <strong class="m-2">Email:</strong>
+                    {{rider.user.email}}
+                  </p>
+                  <p class="m-3">
+                    <strong class="mr-2">Phone Number:</strong>
+                    {% if rider.user.phone_num is none %}
+                    Unknown
+                    {% else %}
+                    {{rider.user.phone_num}}
+                    {% endif %}
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <div class="mx-auto">
+                  <button type="button"
+                  class="btn btn-secondary rounded-md"
+                  data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </li>
+        <li class="list-group-item text-center bg-light">
+          <button type="button" class="btn btn-danger rounded-md" data-toggle="modal" data-target="#leaveRideModal-{{ride_req.id}}">Leave Ride</button>
+          <form action="/rides/{{ ride_req.ride_id }}/leave" method="POST" class="d-inline" onsubmit="disableSubmit()">
+            <div class="modal fade" id="leaveRideModal-{{ride_req.id}}" tabindex="-1" aria-labelledby="leaveRideModalLabel-{{ride_req.id}}" aria-hidden="true">
+              <div class="modal-dialog text-center">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title ml-auto pl-4" id="leaveRideModalLabel-{{ride_req.id}}">Leave Ride</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to leave this ride?</p>
+                    <p>You'll need to make a <strong>new request</strong> if you want to rejoin.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="mx-auto">
+                      <input type="submit" class="btn btn-danger rounded-md" value="Leave Ride">
+                      <button type="button" class="btn btn-secondary rounded-md" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <div class="mt-5 mb-5 p-2 pt-5 pb-5 tt-nothing">
+      <h2>Nothing here.</h2>
+      <p>
+        It looks like you haven't been accepted to any upcoming rides.
+      </p>
+    </div>
+    {% endfor %}
+</div>
+
+{# Pending Rides Tab #}
+<div class="tab-pane fade" id="pending-requests" role="tabpanel" aria-labelledby="pending-requests-tab">
+    {% for ride_req in pending %}
+    <div class="card shadow-sm rounded-md text-left m-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light">
+          <span class="mr-2">
+            <strong class="mr-2">From:</strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride_req.ride.origin }}
+            </span>
+          </span>
+          <span class="mr-2 d-block d-sm-inline">
+            <strong class="mr-2">
+              <span class="d-sm-none">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+              To:
+            </strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride_req.ride.destination }}
+            </span>
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Departure:</strong>
+          <span class="tt-date d-block d-sm-inline">{{ride_req.ride.departure_datetime}}</span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Capacity:</strong>
+          <span class="badge badge-primary">
+            {{ ride_req.ride.riders_count() }} / {{ ride_req.ride.capacity  }}
+          </span>
+        </li>
+        {% if (ride_req.ride.notes) and (ride_req.ride.notes|length > 0) %}
+        <li class="list-group-item">
+          <strong class="mr-2">Notes:</strong>
+          <span class="d-block d-sm-inline">{{ ride_req.ride.notes }}</span>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          <strong class="mr-2">Created by:</strong>
+          <div class=" d-block d-sm-inline mr-auto">
+            <span class="badge border border-dark my-1 m-sm-1">
+              {% if ride_req.ride.is_anonymous %}
+              Princeton Student 🎒
+              {% else %}
+              {{ride_req.ride.creator.disp_name}}
+              ({{ ride_req.ride.creator.netid }})
+              {% endif %}
+            </span>
+          </div>
+        </li>
+        <li class="list-group-item text-center bg-light">
+          <button type="button" class="btn btn-danger rounded-md" data-toggle="modal" data-target="#cancelModal-{{ride_req.id}}">Cancel Request</button>
+          <form action="/ride_requests/{{ ride_req.id }}/cancel" method="POST" class="d-inline" onsubmit="disableSubmit()">
+            <div class="modal fade" id="cancelModal-{{ride_req.id}}" tabindex="-1" aria-labelledby="cancelModalLabel-{{ride_req.id}}" aria-hidden="true">
+              <div class="modal-dialog text-center">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title ml-auto pl-4" id="cancelModalLabel-{{ride_req.id}}">Cancel Ride Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to cancel this ride request?</p>
+                    <p>You'll be able to request this ride again.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="mx-auto">
+                    <input type="submit" class="btn btn-danger rounded-md" value="Cancel">
+                    <button type="button" class="btn btn-secondary rounded-md" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <div class="mt-5 mb-5 p-2 pt-5 pb-5 tt-nothing">
+      <h2>Nothing here.</h2>
+      <p>
+        It looks like you don't have any current pending requests.
+      </p>
+    </div>
+    {% endfor %}
+</div>
+
+{# Rejected Rides Tab #}
+<div class="tab-pane fade" id="rejected-requests" role="tabpanel" aria-labelledby="rejected-requests-tab">
+    {% for ride_req in rejected %}
+    <div class="card shadow-sm rounded-md text-left m-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-light">
+          <span class="mr-2">
+            <strong class="mr-2">From:</strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride_req.ride.origin }}
+            </span>
+          </span>
+          <span class="mr-2 d-block d-sm-inline">
+            <strong class="mr-2">
+              <span class="d-sm-none">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+              To:
+            </strong>
+            <span class="badge badge-dark badge-sm my-1">
+            {{ ride_req.ride.destination }}
+            </span>
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Departure:</strong>
+          <span class="tt-date d-block d-sm-inline">{{ride_req.ride.departure_datetime}}</span>
+        </li>
+        <li class="list-group-item">
+          <strong class="mr-2">Capacity:</strong>
+          <span class="badge badge-primary">
+            {{ ride_req.ride.riders_count() }} / {{ ride_req.ride.capacity  }}
+          </span>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <div class="mt-5 mb-5 p-2 pt-5 pb-5 tt-nothing">
+      <h2>Nothing here.</h2>
+      <p>
+        It looks like you haven't been rejected from any upcoming rides.
+      </p>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

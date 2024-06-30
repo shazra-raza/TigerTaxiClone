@@ -1,0 +1,21 @@
+{# ------------------------------------------------------------------ #}
+{#  404.html                                                          #}
+{#  Author: Kwasi Oppong-Badu                                         #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}404 Error{% endblock %}
+
+{# Navbar override for unauthorized pages #}
+{% block navbar %}
+{% include "elements/unauth-nav.html"%}
+{% endblock %}
+
+{% block content %}
+<h1 class="center">File Not Found</h1>
+<p class="text-center m-4">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('main_bp.search_rides') }}">
+        Back
+    </a>
+</p>
+{% endblock %}

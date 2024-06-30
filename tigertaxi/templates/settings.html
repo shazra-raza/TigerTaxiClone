@@ -1,0 +1,99 @@
+{# ------------------------------------------------------------------ #}
+{#  settings.html                                                     #}
+{#  Author: Jude Muriithi                                             #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="container-fluid center">
+    <h1>Settings</h1>
+    <hr>
+
+    {# Display name  #}
+    <form class="text-left col-md-8 mx-auto"
+        action="{{ url_for('main_bp.user_update', net_id=netid)}}"
+        method="POST">
+        <div class="form-group">
+            <label for="displayName">Display Name</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="displayName"
+                name="disp_name" maxlength="256"
+                placeholder="{{ disp_name }}"
+                value="{{ disp_name }}"
+                aria-describedby="displayNameHelp">
+                <div class="input-group-append">
+                    <input class="btn btn-dark" disabled
+                    id="name-btn" type="submit" value="Change">
+                </div>
+            </div>
+            <small id="displayNameHelp"
+            class="form-text text-muted">
+                This is the name that other users will see on your
+                rides.
+            </small>
+        </div>
+
+    </form>
+
+    {# Phone number #}
+    <form class="text-left col-md-8 mx-auto"
+        action="{{ url_for('main_bp.user_update', net_id=netid)}}"
+        method="POST">
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number (US or Canada)</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="phoneNumber"
+                name="phone_num" maxlength="16"
+                placeholder="{{ phone_number }}"
+                value="{{ phone_number }}"
+                aria-describedby="phoneNumberHelp">
+                <div class="input-group-append">
+                    <input class="btn btn-dark" disabled
+                    id="phone-btn" type="submit" value="Change">
+                </div>
+            </div>
+            <small id="phoneNumberHelp"
+            class="form-text text-muted">
+                Adding your phone number helps other riders coordinate
+                with you more easily.
+            </small>
+        </div>
+    </form>
+
+    {# Email notifs #}
+    <form class="text-left col-md-8 mx-auto"
+    action="{{ url_for('main_bp.user_update', net_id=netid)}}"
+    method="POST" id="emailForm">
+        <label for="emailSelect">Send me email notifications</label>
+        <div class="input-group">
+            <select class="custom-select" name="email_notifs"
+                id="emailSelect">
+                <option value="Yes"
+                {% if email_notifs %}
+                selected id="chosenEmailPref"
+                {% endif %}
+                >
+                    Yes
+                </option>
+                <option value="No"
+                {% if not email_notifs %}
+                selected id="chosenEmailPref"
+                {% endif %}
+                >
+                    No
+                </option>
+            </select>
+            <div class="input-group-append">
+                <input class="btn btn-dark" disabled
+                id="email-btn" type="submit" value="Change">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script src="/static/js/settings.js"></script>
+{% endblock %}

@@ -1,0 +1,143 @@
+/***********************************************************************
+**** createride.css
+**** Authors: Shazra Raza, Kwasi Oppong-Badu
+**** Description: Defines CSS styles used across createride.html
+***********************************************************************/
+
+.form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    background: #EDF2F7;
+    border: 1px solid #CED4DA;
+    box-sizing: border-box;
+    border-radius: 4.8px;
+}
+
+.form2 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px 16px;
+
+    background: #EDF2F7;
+    border: 1px solid #CED4DA;
+    box-sizing: border-box;
+}
+
+.form3 {
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px 16px;
+
+    background: #EDF2F7;
+    border: 1px solid #CED4DA;
+    box-sizing: border-box;
+    border-radius: 4.8px;
+}
+
+.form4 {
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px 16px;
+
+    background: #EDF2F7;
+    border: 1px solid #CED4DA;
+    box-sizing: border-box;
+    border-radius: 4.8px;
+}
+
+.form5 {
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px 16px;
+
+    background: #EDF2F7;
+    border: 1px solid #CED4DA;
+    box-sizing: border-box;
+    border-radius: 4.8px;
+}
+
+.btnposition {
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+}
+
+.button {
+    display: inline-block;
+    border-radius: 2px;
+    background-color: #000000;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: 'Outfit';
+    font-size: 1.5rem;
+    padding: 3px;
+    width: 150px;
+    height: 50px;
+    transition: all 0.2s;
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+.button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
+}
+
+.button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -25px;
+    transition: 0.4s;
+}
+
+.button:hover span {
+    padding-right: 23px;
+}
+
+.button:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+select:invalid {
+    color: rgba(0, 0, 0, 0.37);
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 30px;
+
+}
+
+.clearfix::after {
+      content: "";
+      clear: both;
+      display: table;
+}
+
+.checkbox-font {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.98rem;
+    width:auto;
+    text-align: center;
+    /* identical to box height, or 100% */
+    color:#6e7174;
+}

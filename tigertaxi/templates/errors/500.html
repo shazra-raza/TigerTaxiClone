@@ -1,0 +1,22 @@
+{# ------------------------------------------------------------------ #}
+{#  500.html                                                          #}
+{#  Author: Kwasi Oppong-Badu                                         #}
+{# ------------------------------------------------------------------ #}
+
+{% extends "base.html" %}
+{% block title %}500 Error{% endblock %}
+
+{# Navbar override for unauthorized pages #}
+{% block navbar %}
+{% include "elements/unauth-nav.html"%}
+{% endblock %}
+
+{% block content %}
+<h1 class="center">An unexpected error has occurred</h1>
+<p>The administrator has been notified. Sorry for the inconvenience!</p>
+<p class="text-center m-4">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('main_bp.search_rides') }}">
+        Back
+    </a>
+</p>
+{% endblock %}

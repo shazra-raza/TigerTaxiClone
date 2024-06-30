@@ -1,0 +1,83 @@
+#!/usr/bin/sh
+# ----------------------------------------------------------------------
+# code-verify.sh
+#
+# Formats and lints local repository code so that it can pass the checks
+# implemented in .github/workflows/code-lint.yml
+# ----------------------------------------------------------------------
+
+# Track last executed command
+trap 'prev_command=$curr_command; curr_command=$BASH_COMMAND' DEBUG
+
+# Echo an error message before exiting if any step failed
+trap 'on_fail' ERR
+
+# Error count
+errs=0
+
+on_fail() {
+    error_code=$?
+    errs=$(($errs + 1))
+    if [ $error_code -ne 0 ]
+    then
+    echo
+        echo "FAILED: "$(echo $prev_command | cut -d " " -f 3) \
+        "exited with code "$error_code"."
+    fi
+}
+
+# Formatting step
+echo "Format Python ==================================================="
+echo ""
+
+echo "Format docstrings (docformatter) ********************************"
+python -m docformatter -i --wrap-summaries=72 --wrap-descriptions=72 \
+    **/*.py
+
+echo "Format docstrings done ******************************************"
+echo ""
+
+echo "Sort imports (isort) ********************************************"
+python -m isort .
+echo "Sort imports done ***********************************************"
+echo ""
+
+echo "Run Black (black) ***********************************************"
+python -m black .
+echo "Run Black done **************************************************"
+echo ""
+
+echo "Format Python done =============================================="
+echo ""
+
+# Linting step
+echo "Lint Python ====================================================="
+echo ""
+
+echo "Lint docstrings (pydocstyle) ************************************"
+python -m pydocstyle .
+echo "Lint docstrings done ********************************************"
+echo ""
+
+echo "Lint typing (mypy) **********************************************"
+python -m mypy .
+echo "Lint typing done ************************************************"
+echo ""
+
+echo "Lint Python done ================================================"
+echo ""
+
+# Outputs completion message based on the number of failed tests.
+if [ $errs -eq 0 ]
+then
+    echo "All steps finished successfully. Thank you for writing good" \
+        "code! :)"
+else
+    plural=
+    if [ $errs -gt 1 ]
+    then
+        plural="s"
+    fi
+    echo $errs" step"$plural" failed. Edit files as needed to resolve" \
+    "any issues."
+fi
